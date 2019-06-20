@@ -1578,7 +1578,7 @@ rule("//录入区域98")
 
 	conditions
 	{
-		Global Variable(W) == 15;
+		Global Variable(W) == 17;
 	}
 
 	actions
@@ -1696,5 +1696,51 @@ rule("//录入区域99")
 		Set Player Variable At Index(Players In Slot(1, Team 1), B, 6, 312);
 		Set Player Variable At Index(Players In Slot(1, Team 1), B, 7, 408);
 		Set Global Variable(W, 31);
+	}
+}
+
+rule("//录入区域x")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 17;
+		Entity Exists(Players In Slot(1, Team 1)) == True;
+	}
+
+	actions
+	{
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 32);
+		Set Global Variable(W, 18);
+	}
+}
+
+rule("//录入区域y")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 19;
+	}
+
+	actions
+	{
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 1), 410);
+		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
+		Wait(0.016, Ignore Condition);
+		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
+		Set Global Variable(W, 20);
 	}
 }
