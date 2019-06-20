@@ -1466,7 +1466,8 @@ rule("//录入区域11")
 
 	actions
 	{
-		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 512);
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 416);
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 912);
 		Set Global Variable(W, 14);
 	}
 }
@@ -1483,55 +1484,6 @@ rule("//录入区域12")
 	conditions
 	{
 		Global Variable(W) == 14;
-	}
-
-	actions
-	{
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 1), 310);
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 11), 311);
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 17), 312);
-		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
-		Wait(0.016, Ignore Condition);
-		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
-		Set Global Variable(W, 15);
-	}
-}
-
-rule("//录入区域x")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Slot 1;
-	}
-
-	conditions
-	{
-		Global Variable(W) == 9;
-		Entity Exists(Players In Slot(1, Team 1)) == True;
-	}
-
-	actions
-	{
-		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 416);
-		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 912);
-		Set Global Variable(W, 10);
-	}
-}
-
-rule("//录入区域y")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Slot 1;
-	}
-
-	conditions
-	{
-		Global Variable(W) == 10;
 	}
 
 	actions
@@ -1563,7 +1515,55 @@ rule("//录入区域y")
 		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
 		Wait(0.016, Ignore Condition);
 		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
-		Set Global Variable(W, 11);
+		Set Global Variable(W, 15);
+	}
+}
+
+rule("//录入区域13")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 15;
+		Entity Exists(Players In Slot(1, Team 1)) == True;
+	}
+
+	actions
+	{
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 512);
+		Set Global Variable(W, 16);
+	}
+}
+
+rule("//录入区域14")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 16;
+	}
+
+	actions
+	{
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 1), 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 11), 311);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 17), 312);
+		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
+		Wait(0.016, Ignore Condition);
+		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
+		Set Global Variable(W, 17);
 	}
 }
 
