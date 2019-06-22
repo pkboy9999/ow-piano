@@ -1,4 +1,4 @@
-rule("//巴黎钢琴全自动演奏")
+rule("//巴黎钢琴全自动演奏 v2.0")
 {
 	event
 	{
@@ -40,7 +40,7 @@ rule("//地图框架作者：墨雨千昼#5157")
 	}
 }
 
-rule("//歌曲名称：打上花火（建议演奏英雄：秩序之光）")
+rule("//歌曲名称：打上花火（建议演奏英雄：DVA）")
 {
 	event
 	{
@@ -57,8 +57,8 @@ rule("//歌曲名称：打上花火（建议演奏英雄：秩序之光）")
 	{
 		Skip If(Compare(Modulo(Subtract(Global Variable(Y), 37), 7), ==, 0), 2);
 		Skip If(Compare(Modulo(Subtract(Global Variable(Y), 37), 7), ==, 3), 1);
-		Modify Global Variable(Z, Append To Array, Vector(Add(-85.364, Multiply(Subtract(Global Variable(Y), 38), Divide(38.350, 1000))),
-			13.823, Add(-108.084, Multiply(Subtract(Global Variable(Y), 38), Divide(13.100, 1000)))));
+		Modify Global Variable(Z, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(Y), 38), Divide(38.358, 1000))),
+			13.820, Add(-108.149, Multiply(Subtract(Global Variable(Y), 38), Divide(13.100, 1000)))));
 		Set Global Variable(Y, Add(Global Variable(Y), 1));
 		Wait(0.100, Ignore Condition);
 		Loop If Condition Is True;
@@ -97,7 +97,7 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 	}
 }
 
-rule("//演奏玩家的队伍位置必须处于队伍1的最上方和")
+rule("//演奏玩家的队伍位置必须处于队伍1的最上方的两位")
 {
 	event
 	{
@@ -126,7 +126,7 @@ rule("//演奏玩家的队伍位置必须处于队伍1的最上方和")
 	}
 }
 
-rule("//按互动键传送到钢琴前，建议快节奏的歌使用秩序之光，慢节奏的歌使用dva")
+rule("//按互动键传送到钢琴前，建议快节奏的歌使用秩序之光，慢节奏的歌使用DVA")
 {
 	event
 	{
@@ -261,7 +261,7 @@ rule("---------------------------------曲谱录入区--------------------------
 	{
 		Ongoing - Each Player;
 		Team 1;
-		All;
+		Slot 0;
 	}
 
 	conditions
@@ -271,12 +271,14 @@ rule("---------------------------------曲谱录入区--------------------------
 
 	actions
 	{
-		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 13.514, -107.444));
-		Teleport(Players In Slot(1, Team 1), Vector(-84.583, 13.514, -107.444));
+		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 15.514, -107.444));
+		Teleport(Players In Slot(1, Team 1), Vector(-85.136, 20, -106.035));
 		Set Status(Players In Slot(0, All Teams), Null, Phased Out, 9999);
 		Set Status(Players In Slot(1, All Teams), Null, Phased Out, 9999);
 		Set Player Variable(Players In Slot(0, Team 1), Z, 0);
 		Set Player Variable(Players In Slot(1, Team 1), Z, 0);
+		Set Player Variable(Players In Slot(0, Team 1), X, 0);
+		Set Player Variable(Players In Slot(1, Team 1), X, 0);
 	}
 }
 
@@ -286,7 +288,7 @@ rule("//演奏区域A")
 	{
 		Ongoing - Each Player;
 		All;
-		Slot 1;
+		Slot 0;
 	}
 
 	conditions
@@ -308,7 +310,7 @@ rule("//演奏区域A")
 		Press Button(Players In Slot(0, All Teams), Primary Fire);
 		Wait(Value In Array(Global Variable(B), 0), Ignore Condition);
 		Set Player Variable(Players In Slot(0, All Teams), Z, Add(Player Variable(Players In Slot(0, All Teams), Z), 1));
-		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 256));
+		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 1000));
 	}
 }
 
@@ -371,7 +373,38 @@ rule("//演奏区域C")
 		Press Button(Players In Slot(1, All Teams), Primary Fire);
 		Wait(Value In Array(Global Variable(B), 0), Ignore Condition);
 		Set Player Variable(Players In Slot(1, All Teams), Z, Add(Player Variable(Players In Slot(1, All Teams), Z), 1));
-		Loop If(Compare(Player Variable(Players In Slot(1, All Teams), Z), <=, 256));
+		Loop If(Compare(Player Variable(Players In Slot(1, All Teams), Z), <=, 1000));
+	}
+}
+
+rule("//演奏区域D")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Player Variable(Players In Slot(1, All Teams), Z) == 1000;
+	}
+
+	actions
+	{
+		Skip If(Compare(Value In Array(Player Variable(Players In Slot(1, All Teams), B), Player Variable(Players In Slot(1, All Teams),
+			X)), ==, 0), 1);
+		Set Facing(Players In Slot(1, All Teams), Vector Towards(Eye Position(Players In Slot(1, All Teams)), Value In Array(
+			Global Variable(A), Value In Array(Player Variable(Players In Slot(1, All Teams), B), Player Variable(Players In Slot(1,
+			All Teams), X)))), To World);
+		Wait(0.100, Ignore Condition);
+		Skip If(Compare(Value In Array(Player Variable(Players In Slot(1, All Teams), B), Player Variable(Players In Slot(1, All Teams),
+			X)), ==, 0), 1);
+		Press Button(Players In Slot(1, All Teams), Primary Fire);
+		Wait(Value In Array(Global Variable(B), 0), Ignore Condition);
+		Set Player Variable(Players In Slot(1, All Teams), X, Add(Player Variable(Players In Slot(1, All Teams), X), 1));
+		Loop If(Compare(Player Variable(Players In Slot(1, All Teams), X), <=, 1000));
 	}
 }
 
@@ -1537,6 +1570,7 @@ rule("//录入区域13")
 	actions
 	{
 		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 512);
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 544);
 		Set Global Variable(W, 16);
 	}
 }
@@ -1567,7 +1601,7 @@ rule("//录入区域14")
 	}
 }
 
-rule("//录入区域98")
+rule("//录入区域15")
 {
 	event
 	{
@@ -1579,6 +1613,58 @@ rule("//录入区域98")
 	conditions
 	{
 		Global Variable(W) == 17;
+		Entity Exists(Players In Slot(1, Team 1)) == True;
+	}
+
+	actions
+	{
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 576);
+		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 608);
+		Set Global Variable(W, 18);
+	}
+}
+
+rule("//录入区域16")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 18;
+	}
+
+	actions
+	{
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 1), 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 6), 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 7), 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 11), 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 14), 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 17), 309);
+		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
+		Wait(0.016, Ignore Condition);
+		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
+		Set Global Variable(W, 19);
+	}
+}
+
+rule("//录入区域17")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 1;
+	}
+
+	conditions
+	{
+		Global Variable(W) == 19;
 	}
 
 	actions
@@ -1590,7 +1676,6 @@ rule("//录入区域98")
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 73, 307);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 75, 308);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 79, 211);
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, 67, 210);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 93, 311);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 95, 311);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 97, 207);
@@ -1646,7 +1731,7 @@ rule("//录入区域98")
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 286, 310);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 289, 207);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 293, 307);
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, 284, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 294, 310);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 295, 207);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 299, 308);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 302, 308);
@@ -1669,11 +1754,109 @@ rule("//录入区域98")
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 379, 310);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 509, 309);
 		Set Player Variable At Index(Players In Slot(1, Team 1), A, 539, 408);
-		Set Global Variable(W, 30);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 598, 311);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 601, 312);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 603, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 604, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 605, 209);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 627, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 629, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 631, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 641, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 643, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 646, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 647, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 651, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 655, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 657, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 667, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 668, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 673, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 675, 210);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 677, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 681, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 689, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 690, 312);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 701, 409);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 703, 312);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 704, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 705, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 707, 210);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 708, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 715, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 721, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 725, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 728, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 730, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 731, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 732, 312);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 733, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 737, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 741, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 743, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 744, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 747, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 751, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 753, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 757, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 759, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 765, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 769, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 771, 409);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 773, 410);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 777, 408);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 779, 411);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 781, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 783, 508);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 785, 409);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 787, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 789, 504);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 791, 508);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 795, 411);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 797, 504);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 798, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 799, 411);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 801, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 803, 310);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 805, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 807, 307);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 809, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 811, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 813, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 815, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 817, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 819, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 821, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 823, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 826, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 827, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 829, 309);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 831, 212);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 833, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 835, 210);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 837, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 839, 210);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 842, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 845, 207);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 847, 210);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 849, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 851, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 853, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 855, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 858, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 859, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 861, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 863, 211);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 865, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 867, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 869, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 871, 308);
+		Set Player Variable At Index(Players In Slot(1, Team 1), A, 873, 308);
+		Set Global Variable(W, 20);
 	}
 }
 
-rule("//录入区域99")
+rule("//录入区域18")
 {
 	event
 	{
@@ -1684,7 +1867,7 @@ rule("//录入区域99")
 
 	conditions
 	{
-		Global Variable(W) == 30;
+		Global Variable(W) == 20;
 	}
 
 	actions
@@ -1695,52 +1878,13 @@ rule("//录入区域99")
 		Set Player Variable At Index(Players In Slot(1, Team 1), B, 5, 311);
 		Set Player Variable At Index(Players In Slot(1, Team 1), B, 6, 312);
 		Set Player Variable At Index(Players In Slot(1, Team 1), B, 7, 408);
-		Set Global Variable(W, 31);
-	}
-}
-
-rule("//录入区域x")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Slot 1;
-	}
-
-	conditions
-	{
-		Global Variable(W) == 17;
-		Entity Exists(Players In Slot(1, Team 1)) == True;
-	}
-
-	actions
-	{
-		Modify Player Variable(Players In Slot(1, All Teams), Y, Append To Array, 32);
-		Set Global Variable(W, 18);
-	}
-}
-
-rule("//录入区域y")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Slot 1;
-	}
-
-	conditions
-	{
-		Global Variable(W) == 19;
-	}
-
-	actions
-	{
-		Set Player Variable At Index(Players In Slot(1, Team 1), A, Add(Player Variable(Players In Slot(1, Team 1), Y), 1), 410);
-		Modify Player Variable(Players In Slot(1, Team 1), Y, Remove From Array By Index, 0);
-		Wait(0.016, Ignore Condition);
-		Loop If(Compare(Player Variable(Players In Slot(1, Team 1), Y), !=, Empty Array));
-		Set Global Variable(W, 20);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 9, 410);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 19, 411);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 25, 412);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 35, 508);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 41, 410);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 51, 411);
+		Set Player Variable At Index(Players In Slot(1, Team 1), B, 57, 412);
+		Set Global Variable(W, 21);
 	}
 }
