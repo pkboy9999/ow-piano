@@ -27,7 +27,6 @@ types = {
 def get_note_detail(n):
     return {
         "tie": n.get("tie", {}).get("@type"),
-        # "tied": n.get("notations", {}).get("tied", {}).get("@type"),
         "staff": n.get("staff"),
         "dot": n.get("dot"),
         "type": n.get("type"),
@@ -47,17 +46,17 @@ def get_notes(m):
 def note_to_array(note):
     _ = [{
              "1": "A",
-             "2": "B"
+             "2": "B",
+             None: "A"
          }[note["staff"]]]
     if note["tie"] is "stop":
         _.append(0)
     else:
-        _.append(int(note["octave"]))
-        _.append(0)
+        _.append(int(note["octave"]) * 100)
         if note["alter"] is None:
-            _.append(steps[note["step"]])
+            _[-1] += steps[note["step"]]
         else:
-            _.append(steps[note["step"]] + (7 + note["alter"] if note["alter"] is -1 else 0))
+            _[-1] += (steps[note["step"]] + (7 if note["alter"] is '1' else 6))
     if note["dot"] is None:
         _ += (types[note["type"]] - 1) * [0]
     else:
@@ -68,7 +67,7 @@ def note_to_array(note):
 if __name__ == '__main__':
 
     with open(sys.argv[1], encoding="utf8") as f:
-        # with open("The_Truth_That_You_Leave2.musicxml", encoding="utf8") as f:
+    # with open("blackkey.musicxml", encoding="utf8") as f:
         xml_content = f.read().replace("<dot/>", "<dot>1</dot>")
 
     d = xmltodict.parse(xml_content)
