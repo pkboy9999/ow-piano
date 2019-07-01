@@ -15,10 +15,10 @@ steps = {
     "B": 7
 }
 types = {
-    "whole": 16,
-    "half": 8,
-    "quarter": 4,
-    "eighth": 2,
+    "whole": 8,
+    "half": 4,
+    "quarter": 2,
+    "eighth": 0,
     "16th": 0,
     "32nd": 0
 }
@@ -49,20 +49,24 @@ def note_to_array(note):
              "2": "B",
              None: "A"
          }[note["staff"]]]
-    if note["tie"] is "stop":
+    if note["tie"] == "stop":
         _.append(0)
     else:
         _.append(int(note["octave"]) * 100)
         if note["alter"] is None:
             _[-1] += steps[note["step"]]
         else:
-            _[-1] += (steps[note["step"]] + (7 if note["alter"] is '1' else 6))
+            if note["step"] in "CDE":
+                alter_note = (steps[note["step"]] + (7 if note["alter"] == '1' else 6))
+            else:
+                alter_note = (steps[note["step"]] + (6 if note["alter"] == '1' else 5))
+
+            _[-1] += alter_note
     if note["dot"] is None:
         _ += (types[note["type"]] - 1) * [0]
     else:
         _ += int((types[note["type"]] - 1) + (types[note["type"]] / 2)) * [0]
     return _
-
 
 if __name__ == '__main__':
 
@@ -88,33 +92,33 @@ if __name__ == '__main__':
     slot1_array = list(filter(lambda x: x != "A", slot1_array))
     slot2_array = list(filter(lambda x: x != "B", slot2_array))
 
-    slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
-    slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
+    # slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
+    # slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
 
 
-    def array_to_script(s, a):
-        action_example = r"""
-        Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
-        """
-        result_text = ""
-        for i in range(len(a)):
-            values = ""
-            counter = 0
-            for member in a[i]:
-                values += str(member) + "),"
-                counter += 1
-            values = values[:-1]
-            result_text += action_example.format(
-                slot=s,
-                var_name=A_Z[i],
-                append=counter * "Append To Array(",
-                values=values
-            )
+    # def array_to_script(s, a):
+    #     action_example = r"""
+    #     Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
+    #     """
+    #     result_text = ""
+    #     for i in range(len(a)):
+    #         values = ""
+    #         counter = 0
+    #         for member in a[i]:
+    #             values += str(member) + "),"
+    #             counter += 1
+    #         values = values[:-1]
+    #         result_text += action_example.format(
+    #             slot=s,
+    #             var_name=A_Z[i],
+    #             append=counter * "Append To Array(",
+    #             values=values
+    #         )
 
-        return result_text
+    #     return result_text
 
 
-    text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
-    text = "actions{" + text + "}"
-    print(text)
-    pyperclip.copy(text)
+    # text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
+    # text = "actions{" + text + "}"
+    # print(text)
+    # pyperclip.copy(text)
