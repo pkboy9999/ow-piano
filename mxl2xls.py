@@ -2,6 +2,8 @@ import sys
 from itertools import chain
 import xmltodict
 import pyperclip
+import numpy as np
+import pandas as pd
 
 A_Z = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -21,10 +23,10 @@ beat_types_map = {
     1: "whole", 2: "half", 4: "quarter", 8: "eighth", 16: "16th", 32: "32nd"
 }
 types = {
-    "whole": 8,
-    "half": 4,
-    "quarter": 2,
-    "eighth": 0,
+    "whole": 16,
+    "half": 8,
+    "quarter": 4,
+    "eighth": 2,
     "16th": 0,
     "32nd": 0
 }
@@ -99,8 +101,8 @@ def note_to_array(note):
 
 if __name__ == '__main__':
 
-    with open(sys.argv[1], encoding="utf8") as f:  # 此处取消注释可用于命令行第一个参数
-    # with open("The_Truth_That_You_Leave2.musicxml", encoding="utf8") as f:  # 此处调试使用
+    # with open(sys.argv[1], encoding="utf8") as f:  # 此处取消注释可用于命令行第一个参数
+    with open("The_Truth_That_You_Leave2.musicxml", encoding="utf8") as f:  # 此处调试使用
         xml_content = f.read() \
             .replace("<dot/>", "<dot>1</dot>") \
             .replace("<rest/>", "<rest>1</rest>")
@@ -129,33 +131,45 @@ if __name__ == '__main__':
     slot1_array = list(filter(lambda x: x != "A", slot1_array))
     slot2_array = list(filter(lambda x: x != "B", slot2_array))
 
-    # slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
-    # slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
+    ###################
+    # 此处写入excel
+    ###################
+
+    with pd.ExcelWriter('player.xlsx') as writer:
+        pd.DataFrame(np.array(slot1_array)).to_excel(writer, "player1")
+        pd.DataFrame(np.array(slot2_array)).to_excel(writer, "player2")
+        writer.save()
+
+    ###################
+
+    slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
+    slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
 
 
-    # def array_to_script(s, a):
-    #     action_example = r"""
-    #     Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
-    #     """
-    #     result_text = ""
-    #     for i in range(len(a)):
-    #         values = ""
-    #         counter = 0
-    #         for member in a[i]:
-    #             values += str(member) + "),"
-    #             counter += 1
-    #         values = values[:-1]
-    #         result_text += action_example.format(
-    #             slot=s,
-    #             var_name=A_Z[i],
-    #             append=counter * "Append To Array(",
-    #             values=values
-    #         )
-
-    #     return result_text
 
 
-    # text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
-    # text = "actions{" + text + "}"
-    # print(text)
-    # pyperclip.copy(text)
+    def array_to_script(s, a):
+        action_example = r"""
+        Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
+        """
+        result_text = ""
+        for i in range(len(a)):
+            values = ""
+            counter = 0
+            for member in a[i]:
+                values += str(member) + "),"
+                counter += 1
+            values = values[:-1]
+            result_text += action_example.format(
+                slot=s,
+                var_name=A_Z[i],
+                append=counter * "Append To Array(",
+                values=values
+            )
+
+        return result_text
+
+    text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
+    text = "actions{" + text + "}"
+    print(text)
+    pyperclip.copy(text)
