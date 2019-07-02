@@ -129,33 +129,33 @@ if __name__ == '__main__':
     slot1_array = list(filter(lambda x: x != "A", slot1_array))
     slot2_array = list(filter(lambda x: x != "B", slot2_array))
 
-    # slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
-    # slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
+    slot1_array = [slot1_array[i:i + 1000] for i in range(0, len(slot1_array), 1000)]
+    slot2_array = [slot2_array[i:i + 1000] for i in range(0, len(slot2_array), 1000)]
 
 
-    # def array_to_script(s, a):
-    #     action_example = r"""
-    #     Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
-    #     """
-    #     result_text = ""
-    #     for i in range(len(a)):
-    #         values = ""
-    #         counter = 0
-    #         for member in a[i]:
-    #             values += str(member) + "),"
-    #             counter += 1
-    #         values = values[:-1]
-    #         result_text += action_example.format(
-    #             slot=s,
-    #             var_name=A_Z[i],
-    #             append=counter * "Append To Array(",
-    #             values=values
-    #         )
+    def array_to_script(s, a):
+        action_example = r"""
+        Set Player Variable(Players In Slot({slot}, Team 1), {var_name},{append}Empty Array,{values});
+        """
+        result_text = ""
+        for i in range(len(a)):
+            values = ""
+            counter = 0
+            for member in a[i]:
+                values += str(member) + "),"
+                counter += 1
+            values = values[:-1]
+            result_text += action_example.format(
+                slot=s,
+                var_name=A_Z[i],
+                append=counter * "Append To Array(",
+                values=values
+            )
 
-    #     return result_text
+        return result_text
 
 
-    # text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
-    # text = "actions{" + text + "}"
-    # print(text)
-    # pyperclip.copy(text)
+    text = array_to_script(0, slot1_array) + array_to_script(1, slot2_array)
+    text = "actions{" + text + "}"
+    print(text)
+    pyperclip.copy(text)

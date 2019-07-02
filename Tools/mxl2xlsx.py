@@ -135,7 +135,7 @@ if __name__ == '__main__':
     def writeExcel(path, dataA, dataB):
         wb = openpyxl.Workbook()
         sheet = wb.active
-        sheet.title = 'piano'
+        sheet.title = 'ow-piano'
 
         for i in range(0, len(dataA)):
             sheet.cell(row=i+1, column=1, value=i+1)
