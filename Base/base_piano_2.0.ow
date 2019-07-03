@@ -1,4 +1,4 @@
-rule("//巴黎钢琴全自动演奏2.0")
+rule("变量初始化")
 {
 	event
 	{
@@ -8,15 +8,58 @@ rule("//巴黎钢琴全自动演奏2.0")
 	actions
 	{
 		Set Global Variable(A, Empty Array);
-		Set Global Variable(B, Empty Array);
-		Set Global Variable(W, 0);
-		Set Global Variable(X, 0);
-		Set Global Variable(Y, 0);
-		Set Global Variable(Z, Empty Array);
+		Set Global Variable(B, 0);
+		Set Global Variable(Z, 0);
 	}
 }
 
-rule("//地图框架作者：墨雨千昼#5157")
+rule("初始化琴键坐标A[1]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 0;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Modify Global Variable At Index(A, 1, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 6));
+		Set Global Variable(Z, 1);
+	}
+}
+
+rule("初始化琴键坐标A[2]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(B) > 6;
+	}
+
+	actions
+	{
+		Wait(0.025, Ignore Condition);
+		Modify Global Variable At Index(A, 2, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 13));
+		Set Global Variable(Z, 2);
+	}
+}
+
+disabled rule("//地图框架作者：墨雨千昼#5157")
 {
 	event
 	{
@@ -40,7 +83,7 @@ rule("//地图框架作者：墨雨千昼#5157")
 	}
 }
 
-rule("//歌曲名称：（建议演奏英雄：秩序之光）")
+disabled rule("//歌曲名称：（建议演奏英雄：秩序之光）")
 {
 	event
 	{
@@ -68,7 +111,7 @@ rule("//歌曲名称：（建议演奏英雄：秩序之光）")
 	}
 }
 
-rule("//更多曲谱，欢迎加战网好友交流分享")
+disabled rule("//更多曲谱，欢迎加战网好友交流分享")
 {
 	event
 	{
@@ -94,6 +137,23 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 		Set Global Variable At Index(A, 106, Value In Array(Global Variable(Z), 5));
 		Set Global Variable At Index(A, 112, Value In Array(Global Variable(Z), 42));
 		Set Global Variable At Index(A, 107, Value In Array(Global Variable(Z), 6));
+	}
+}
+
+disabled rule("//演奏玩家的队伍位置必须处于队伍1的最上方的两位")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(X) == 2;
+	}
+
+	actions
+	{
 		Set Global Variable At Index(A, 201, Value In Array(Global Variable(Z), 7));
 		Set Global Variable At Index(A, 208, Value In Array(Global Variable(Z), 43));
 		Set Global Variable At Index(A, 202, Value In Array(Global Variable(Z), 8));
@@ -106,6 +166,23 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 		Set Global Variable At Index(A, 206, Value In Array(Global Variable(Z), 12));
 		Set Global Variable At Index(A, 212, Value In Array(Global Variable(Z), 47));
 		Set Global Variable At Index(A, 207, Value In Array(Global Variable(Z), 13));
+	}
+}
+
+disabled rule("//按互动键传送到钢琴前，建议快节奏的歌使用秩序之光，慢节奏的歌使用DVA")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(X) == 2;
+	}
+
+	actions
+	{
 		Set Global Variable At Index(A, 301, Value In Array(Global Variable(Z), 14));
 		Set Global Variable At Index(A, 308, Value In Array(Global Variable(Z), 48));
 		Set Global Variable At Index(A, 302, Value In Array(Global Variable(Z), 15));
@@ -118,6 +195,23 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 		Set Global Variable At Index(A, 306, Value In Array(Global Variable(Z), 19));
 		Set Global Variable At Index(A, 312, Value In Array(Global Variable(Z), 52));
 		Set Global Variable At Index(A, 307, Value In Array(Global Variable(Z), 20));
+	}
+}
+
+disabled rule("//按E键开始演奏")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(X) == 2;
+	}
+
+	actions
+	{
 		Set Global Variable At Index(A, 401, Value In Array(Global Variable(Z), 21));
 		Set Global Variable At Index(A, 408, Value In Array(Global Variable(Z), 53));
 		Set Global Variable At Index(A, 402, Value In Array(Global Variable(Z), 22));
@@ -130,6 +224,23 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 		Set Global Variable At Index(A, 406, Value In Array(Global Variable(Z), 26));
 		Set Global Variable At Index(A, 412, Value In Array(Global Variable(Z), 57));
 		Set Global Variable At Index(A, 407, Value In Array(Global Variable(Z), 27));
+	}
+}
+
+disabled rule("//上面这些规则不了解原理的话不要随便调整，会影响演奏效果")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(X) == 2;
+	}
+
+	actions
+	{
 		Set Global Variable At Index(A, 501, Value In Array(Global Variable(Z), 28));
 		Set Global Variable At Index(A, 508, Value In Array(Global Variable(Z), 58));
 		Set Global Variable At Index(A, 502, Value In Array(Global Variable(Z), 29));
@@ -142,6 +253,23 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 		Set Global Variable At Index(A, 506, Value In Array(Global Variable(Z), 33));
 		Set Global Variable At Index(A, 512, Value In Array(Global Variable(Z), 62));
 		Set Global Variable At Index(A, 507, Value In Array(Global Variable(Z), 34));
+	}
+}
+
+disabled rule("---------------------------------我系分隔线----------------------------------------")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(X) == 2;
+	}
+
+	actions
+	{
 		Set Global Variable At Index(A, 601, Value In Array(Global Variable(Z), 35));
 		Set Global Variable At Index(A, 608, Value In Array(Global Variable(Z), 63));
 		Set Global Variable At Index(A, 602, Value In Array(Global Variable(Z), 36));
@@ -150,7 +278,7 @@ rule("//更多曲谱，欢迎加战网好友交流分享")
 	}
 }
 
-rule("//音符之间的演奏间隔，根据曲目的速率调整")
+disabled rule("//音符之间的演奏间隔，根据曲目的速率调整")
 {
 	event
 	{
@@ -170,7 +298,7 @@ rule("//音符之间的演奏间隔，根据曲目的速率调整")
 	}
 }
 
-rule("---------------------------------曲谱录入区----------------------------------------")
+disabled rule("---------------------------------曲谱录入区----------------------------------------")
 {
 	event
 	{
@@ -193,7 +321,7 @@ rule("---------------------------------曲谱录入区--------------------------
 	}
 }
 
-rule("//演奏区域A")
+disabled rule("//演奏区域A")
 {
 	event
 	{
@@ -225,7 +353,7 @@ rule("//演奏区域A")
 	}
 }
 
-rule("//演奏区域B")
+disabled rule("//演奏区域B")
 {
 	event
 	{
@@ -256,7 +384,7 @@ rule("//演奏区域B")
 	}
 }
 
-rule("//录入区域1")
+disabled rule("//录入区域1")
 {
 	event
 	{
@@ -278,7 +406,7 @@ rule("//录入区域1")
 	}
 }
 
-rule("//录入区域2")
+disabled rule("//录入区域2")
 {
 	event
 	{
@@ -300,5 +428,52 @@ rule("//录入区域2")
 		Wait(0.016, Ignore Condition);
 		Loop If(Compare(Player Variable(Players In Slot(0, Team 1), Y), !=, Empty Array));
 		Set Global Variable(X, 5);
+	}
+}
+
+rule("规则 59")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Ultimate) == True;
+	}
+
+	actions
+	{
+		Create Effect(All Players(All Teams), Sphere, Yellow, Value In Array(Value In Array(Global Variable(A), 6), Global Variable(S)),
+			0.010, None);
+		Wait(0.020, Ignore Condition);
+		Modify Global Variable(S, Add, 1);
+		Loop If(Compare(Global Variable(S), <, 76));
+	}
+}
+
+rule("规则 18")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 1;
+	}
+
+	actions
+	{
+		Set Global Variable(C, Value In Array(Global Variable(A), 6));
+		Set Global Variable(D, Value In Array(Global Variable(A), 5));
+		Set Global Variable(E, Value In Array(Global Variable(A), 4));
+		Set Global Variable(F, Value In Array(Global Variable(A), 3));
+		Set Global Variable(G, Value In Array(Global Variable(A), 2));
+		Set Global Variable(H, Value In Array(Global Variable(A), 1));
 	}
 }
