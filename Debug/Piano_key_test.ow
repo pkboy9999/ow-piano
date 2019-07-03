@@ -1,0 +1,23 @@
+rule("规则 59")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Ultimate) == True;
+	}
+
+	actions
+	{
+		Create Effect(All Players(All Teams), Sphere, Yellow, Value In Array(Value In Array(Global Variable(A), 6), Global Variable(S)),
+			0.010, None);
+		Wait(0.020, Ignore Condition);
+		Modify Global Variable(S, Add, 1);
+		Loop If(Compare(Global Variable(S), <, 76));
+	}
+}

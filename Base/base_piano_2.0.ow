@@ -32,7 +32,6 @@ rule("初始化琴键坐标A[1]")
 			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
 		Set Global Variable(B, Add(Global Variable(B), 1));
 		Loop If(Compare(Global Variable(B), <=, 6));
-		Set Global Variable(Z, 1);
 	}
 }
 
@@ -55,11 +54,10 @@ rule("初始化琴键坐标A[2]")
 			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
 		Set Global Variable(B, Add(Global Variable(B), 1));
 		Loop If(Compare(Global Variable(B), <=, 13));
-		Set Global Variable(Z, 2);
 	}
 }
 
-disabled rule("//地图框架作者：墨雨千昼#5157")
+rule("初始化琴键坐标A[3]")
 {
 	event
 	{
@@ -68,22 +66,20 @@ disabled rule("//地图框架作者：墨雨千昼#5157")
 
 	conditions
 	{
-		Global Variable(Y) <= 37;
+		Global Variable(B) > 13;
 	}
 
 	actions
 	{
-		Modify Global Variable(Z, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(Y), Divide(38.500, 1000))), 13.800, Add(
-			-108.021, Multiply(Global Variable(Y), Divide(13.200, 1000)))));
-		Set Global Variable(Y, Add(Global Variable(Y), 1));
-		Wait(0.100, Ignore Condition);
-		Loop If Condition Is True;
-		Set Global Variable(X, 1);
-		Set Global Variable(W, 1);
+		Wait(0.025, Ignore Condition);
+		Modify Global Variable At Index(A, 3, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 20));
 	}
 }
 
-disabled rule("//歌曲名称：（建议演奏英雄：秩序之光）")
+rule("初始化琴键坐标A[4]")
 {
 	event
 	{
@@ -92,26 +88,20 @@ disabled rule("//歌曲名称：（建议演奏英雄：秩序之光）")
 
 	conditions
 	{
-		Global Variable(Y) <= 76;
-		Global Variable(X) == 1;
+		Global Variable(B) > 20;
 	}
 
 	actions
 	{
-		Skip If(Compare(Modulo(Subtract(Global Variable(Y), 37), 7), ==, 0), 2);
-		Skip If(Compare(Modulo(Subtract(Global Variable(Y), 37), 7), ==, 3), 1);
-		Modify Global Variable(Z, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(Y), 38), Divide(38.358, 1000))),
-			13.820, Add(-108.149, Multiply(Subtract(Global Variable(Y), 38), Divide(13.100, 1000)))));
-		Set Global Variable(Y, Add(Global Variable(Y), 1));
-		Wait(0.100, Ignore Condition);
-		Loop If Condition Is True;
-		Set Player Variable(Players In Slot(0, All Teams), A, Empty Array);
-		Set Global Variable(X, 2);
-		Set Global Variable(W, 2);
+		Wait(0.025, Ignore Condition);
+		Modify Global Variable At Index(A, 4, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 27));
 	}
 }
 
-disabled rule("//更多曲谱，欢迎加战网好友交流分享")
+rule("初始化琴键坐标A[5]")
 {
 	event
 	{
@@ -120,27 +110,20 @@ disabled rule("//更多曲谱，欢迎加战网好友交流分享")
 
 	conditions
 	{
-		Global Variable(X) == 2;
+		Global Variable(B) > 27;
 	}
 
 	actions
 	{
-		Set Global Variable At Index(A, 101, Value In Array(Global Variable(Z), 0));
-		Set Global Variable At Index(A, 108, Value In Array(Global Variable(Z), 38));
-		Set Global Variable At Index(A, 102, Value In Array(Global Variable(Z), 1));
-		Set Global Variable At Index(A, 109, Value In Array(Global Variable(Z), 39));
-		Set Global Variable At Index(A, 103, Value In Array(Global Variable(Z), 2));
-		Set Global Variable At Index(A, 104, Value In Array(Global Variable(Z), 3));
-		Set Global Variable At Index(A, 110, Value In Array(Global Variable(Z), 40));
-		Set Global Variable At Index(A, 105, Value In Array(Global Variable(Z), 4));
-		Set Global Variable At Index(A, 111, Value In Array(Global Variable(Z), 41));
-		Set Global Variable At Index(A, 106, Value In Array(Global Variable(Z), 5));
-		Set Global Variable At Index(A, 112, Value In Array(Global Variable(Z), 42));
-		Set Global Variable At Index(A, 107, Value In Array(Global Variable(Z), 6));
+		Wait(0.025, Ignore Condition);
+		Modify Global Variable At Index(A, 5, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 35));
 	}
 }
 
-disabled rule("//演奏玩家的队伍位置必须处于队伍1的最上方的两位")
+rule("初始化琴键坐标A[6]")
 {
 	event
 	{
@@ -149,309 +132,17 @@ disabled rule("//演奏玩家的队伍位置必须处于队伍1的最上方的�
 
 	conditions
 	{
-		Global Variable(X) == 2;
+		Global Variable(B) > 35;
 	}
 
 	actions
 	{
-		Set Global Variable At Index(A, 201, Value In Array(Global Variable(Z), 7));
-		Set Global Variable At Index(A, 208, Value In Array(Global Variable(Z), 43));
-		Set Global Variable At Index(A, 202, Value In Array(Global Variable(Z), 8));
-		Set Global Variable At Index(A, 209, Value In Array(Global Variable(Z), 44));
-		Set Global Variable At Index(A, 203, Value In Array(Global Variable(Z), 9));
-		Set Global Variable At Index(A, 204, Value In Array(Global Variable(Z), 10));
-		Set Global Variable At Index(A, 210, Value In Array(Global Variable(Z), 45));
-		Set Global Variable At Index(A, 205, Value In Array(Global Variable(Z), 11));
-		Set Global Variable At Index(A, 211, Value In Array(Global Variable(Z), 46));
-		Set Global Variable At Index(A, 206, Value In Array(Global Variable(Z), 12));
-		Set Global Variable At Index(A, 212, Value In Array(Global Variable(Z), 47));
-		Set Global Variable At Index(A, 207, Value In Array(Global Variable(Z), 13));
-	}
-}
-
-disabled rule("//按互动键传送到钢琴前，建议快节奏的歌使用秩序之光，慢节奏的歌使用DVA")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 2;
-	}
-
-	actions
-	{
-		Set Global Variable At Index(A, 301, Value In Array(Global Variable(Z), 14));
-		Set Global Variable At Index(A, 308, Value In Array(Global Variable(Z), 48));
-		Set Global Variable At Index(A, 302, Value In Array(Global Variable(Z), 15));
-		Set Global Variable At Index(A, 309, Value In Array(Global Variable(Z), 49));
-		Set Global Variable At Index(A, 303, Value In Array(Global Variable(Z), 16));
-		Set Global Variable At Index(A, 304, Value In Array(Global Variable(Z), 17));
-		Set Global Variable At Index(A, 310, Value In Array(Global Variable(Z), 50));
-		Set Global Variable At Index(A, 305, Value In Array(Global Variable(Z), 18));
-		Set Global Variable At Index(A, 311, Value In Array(Global Variable(Z), 51));
-		Set Global Variable At Index(A, 306, Value In Array(Global Variable(Z), 19));
-		Set Global Variable At Index(A, 312, Value In Array(Global Variable(Z), 52));
-		Set Global Variable At Index(A, 307, Value In Array(Global Variable(Z), 20));
-	}
-}
-
-disabled rule("//按E键开始演奏")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 2;
-	}
-
-	actions
-	{
-		Set Global Variable At Index(A, 401, Value In Array(Global Variable(Z), 21));
-		Set Global Variable At Index(A, 408, Value In Array(Global Variable(Z), 53));
-		Set Global Variable At Index(A, 402, Value In Array(Global Variable(Z), 22));
-		Set Global Variable At Index(A, 409, Value In Array(Global Variable(Z), 54));
-		Set Global Variable At Index(A, 403, Value In Array(Global Variable(Z), 23));
-		Set Global Variable At Index(A, 404, Value In Array(Global Variable(Z), 24));
-		Set Global Variable At Index(A, 410, Value In Array(Global Variable(Z), 55));
-		Set Global Variable At Index(A, 405, Value In Array(Global Variable(Z), 25));
-		Set Global Variable At Index(A, 411, Value In Array(Global Variable(Z), 56));
-		Set Global Variable At Index(A, 406, Value In Array(Global Variable(Z), 26));
-		Set Global Variable At Index(A, 412, Value In Array(Global Variable(Z), 57));
-		Set Global Variable At Index(A, 407, Value In Array(Global Variable(Z), 27));
-	}
-}
-
-disabled rule("//上面这些规则不了解原理的话不要随便调整，会影响演奏效果")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 2;
-	}
-
-	actions
-	{
-		Set Global Variable At Index(A, 501, Value In Array(Global Variable(Z), 28));
-		Set Global Variable At Index(A, 508, Value In Array(Global Variable(Z), 58));
-		Set Global Variable At Index(A, 502, Value In Array(Global Variable(Z), 29));
-		Set Global Variable At Index(A, 509, Value In Array(Global Variable(Z), 59));
-		Set Global Variable At Index(A, 503, Value In Array(Global Variable(Z), 30));
-		Set Global Variable At Index(A, 504, Value In Array(Global Variable(Z), 31));
-		Set Global Variable At Index(A, 510, Value In Array(Global Variable(Z), 60));
-		Set Global Variable At Index(A, 505, Value In Array(Global Variable(Z), 32));
-		Set Global Variable At Index(A, 511, Value In Array(Global Variable(Z), 61));
-		Set Global Variable At Index(A, 506, Value In Array(Global Variable(Z), 33));
-		Set Global Variable At Index(A, 512, Value In Array(Global Variable(Z), 62));
-		Set Global Variable At Index(A, 507, Value In Array(Global Variable(Z), 34));
-	}
-}
-
-disabled rule("---------------------------------我系分隔线----------------------------------------")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 2;
-	}
-
-	actions
-	{
-		Set Global Variable At Index(A, 601, Value In Array(Global Variable(Z), 35));
-		Set Global Variable At Index(A, 608, Value In Array(Global Variable(Z), 63));
-		Set Global Variable At Index(A, 602, Value In Array(Global Variable(Z), 36));
-		Set Global Variable At Index(A, 609, Value In Array(Global Variable(Z), 64));
-		Set Global Variable At Index(A, 603, Value In Array(Global Variable(Z), 37));
-	}
-}
-
-disabled rule("//音符之间的演奏间隔，根据曲目的速率调整")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Count Of(Global Variable(A)) >= 65;
-	}
-
-	actions
-	{
-		Modify Global Variable(B, Append To Array, 0.058);
-		Set Global Variable(X, 3);
-		Set Global Variable(W, 3);
-	}
-}
-
-disabled rule("---------------------------------曲谱录入区----------------------------------------")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Slot 0;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Interact) == True;
-	}
-
-	actions
-	{
-		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 13.510, -107.444));
-		Set Status(Players In Slot(0, All Teams), Null, Phased Out, 9999);
-		Set Player Variable(Players In Slot(0, Team 1), Z, 0);
-		Set Player Variable(Players In Slot(0, Team 1), X, 0);
-	}
-}
-
-disabled rule("//演奏区域A")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		Slot 0;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Ability 2) == True;
-		Player Variable(Players In Slot(0, All Teams), Z) == 0;
-	}
-
-	actions
-	{
-		Skip If(Compare(Value In Array(Player Variable(Players In Slot(0, All Teams), A), Player Variable(Players In Slot(0, All Teams),
-			Z)), ==, 0), 1);
-		Set Facing(Players In Slot(0, All Teams), Vector Towards(Eye Position(Players In Slot(0, All Teams)), Value In Array(
-			Global Variable(A), Value In Array(Player Variable(Players In Slot(0, All Teams), A), Player Variable(Players In Slot(0,
-			All Teams), Z)))), To World);
-		Wait(0.100, Ignore Condition);
-		Skip If(Compare(Value In Array(Player Variable(Players In Slot(0, All Teams), A), Player Variable(Players In Slot(0, All Teams),
-			Z)), ==, 0), 1);
-		Press Button(Players In Slot(0, All Teams), Primary Fire);
-		Wait(Value In Array(Global Variable(B), 0), Ignore Condition);
-		Set Player Variable(Players In Slot(0, All Teams), Z, Add(Player Variable(Players In Slot(0, All Teams), Z), 1));
-		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 1000));
-	}
-}
-
-disabled rule("//演奏区域B")
-{
-	event
-	{
-		Ongoing - Each Player;
-		Team 1;
-		Slot 0;
-	}
-
-	conditions
-	{
-		Player Variable(Players In Slot(0, All Teams), Z) == 1000;
-	}
-
-	actions
-	{
-		Skip If(Compare(Value In Array(Player Variable(Players In Slot(0, All Teams), B), Player Variable(Players In Slot(0, All Teams),
-			X)), ==, 0), 1);
-		Set Facing(Players In Slot(0, All Teams), Vector Towards(Eye Position(Players In Slot(0, All Teams)), Value In Array(
-			Global Variable(A), Value In Array(Player Variable(Players In Slot(0, All Teams), B), Player Variable(Players In Slot(0,
-			All Teams), X)))), To World);
-		Wait(0.100, Ignore Condition);
-		Skip If(Compare(Value In Array(Player Variable(Players In Slot(0, All Teams), B), Player Variable(Players In Slot(0, All Teams),
-			X)), ==, 0), 1);
-		Press Button(Players In Slot(0, All Teams), Primary Fire);
-		Wait(Value In Array(Global Variable(B), 0), Ignore Condition);
-		Set Player Variable(Players In Slot(0, All Teams), X, Add(Player Variable(Players In Slot(0, All Teams), X), 1));
-		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), X), <=, 69));
-	}
-}
-
-disabled rule("//录入区域1")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 3;
-		Entity Exists(Players In Slot(0, Team 1)) == True;
-	}
-
-	actions
-	{
-		Modify Player Variable(Players In Slot(0, All Teams), Y, Append To Array, 8);
-		Modify Player Variable(Players In Slot(0, All Teams), Y, Append To Array, 32);
-		Modify Player Variable(Players In Slot(0, All Teams), Y, Append To Array, 40);
-		Set Global Variable(X, 4);
-	}
-}
-
-disabled rule("//录入区域2")
-{
-	event
-	{
-		Ongoing - Global;
-	}
-
-	conditions
-	{
-		Global Variable(X) == 4;
-	}
-
-	actions
-	{
-		Set Player Variable At Index(Players In Slot(0, Team 1), A, Add(Player Variable(Players In Slot(0, Team 1), Y), 1), 511);
-		Set Player Variable At Index(Players In Slot(0, Team 1), A, Add(Player Variable(Players In Slot(0, Team 1), Y), 3), 512);
-		Set Player Variable At Index(Players In Slot(0, Team 1), A, Add(Player Variable(Players In Slot(0, Team 1), Y), 5), 608);
-		Set Player Variable At Index(Players In Slot(0, Team 1), A, Add(Player Variable(Players In Slot(0, Team 1), Y), 7), 510);
-		Modify Player Variable(Players In Slot(0, Team 1), Y, Remove From Array By Index, 0);
-		Wait(0.016, Ignore Condition);
-		Loop If(Compare(Player Variable(Players In Slot(0, Team 1), Y), !=, Empty Array));
-		Set Global Variable(X, 5);
-	}
-}
-
-rule("规则 59")
-{
-	event
-	{
-		Ongoing - Each Player;
-		All;
-		All;
-	}
-
-	conditions
-	{
-		Is Button Held(Event Player, Ultimate) == True;
-	}
-
-	actions
-	{
-		Create Effect(All Players(All Teams), Sphere, Yellow, Value In Array(Value In Array(Global Variable(A), 6), Global Variable(S)),
-			0.010, None);
-		Wait(0.020, Ignore Condition);
-		Modify Global Variable(S, Add, 1);
-		Loop If(Compare(Global Variable(S), <, 76));
+		Wait(0.025, Ignore Condition);
+		Modify Global Variable At Index(A, 6, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))),
+			13.800, Add(-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 38));
+		Set Global Variable(Z, 1);
 	}
 }
 
