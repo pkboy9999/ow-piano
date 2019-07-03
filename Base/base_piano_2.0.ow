@@ -9,13 +9,6 @@ rule("变量初始化")
 	{
 		Set Global Variable(A, Empty Array);
 		Set Global Variable(B, 0);
-		Set Global Variable(C, Empty Array);
-		Set Global Variable(D, Empty Array);
-		Set Global Variable(E, Empty Array);
-		Set Global Variable(F, Empty Array);
-		Set Global Variable(G, Empty Array);
-		Set Global Variable(H, Empty Array);
-		Set Global Variable(I, Empty Array);
 		Set Global Variable(Z, 0);
 	}
 }
@@ -52,7 +45,6 @@ rule("初始化钢琴黑键坐标A[7]")
 
 	conditions
 	{
-		Global Variable(B) <= 76;
 		Global Variable(Z) == 1;
 	}
 
@@ -60,17 +52,16 @@ rule("初始化钢琴黑键坐标A[7]")
 	{
 		Skip If(Compare(Modulo(Subtract(Global Variable(B), 37), 7), ==, 0), 2);
 		Skip If(Compare(Modulo(Subtract(Global Variable(B), 37), 7), ==, 3), 1);
-		Modify Global Variable At Index(A, 7, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(B), 38), Divide(38.358, 1000))),
-			13.820, Add(-108.149, Multiply(Subtract(Global Variable(Y), 38), Divide(13.100, 1000)))));
+		Modify Global Variable At Index(A, 7, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(B), 38), Divide(
+			38.358, 1000))), 13.820, Add(-108.149, Multiply(Subtract(Global Variable(B), 38), Divide(13.100, 1000)))));
+		Wait(0.016, Ignore Condition);
 		Set Global Variable(B, Add(Global Variable(B), 1));
-		Wait(0.100, Ignore Condition);
-		Loop If Condition Is True;
-		Set Player Variable(Players In Slot(0, All Teams), A, Empty Array);
+		Loop If(Compare(Global Variable(B), <=, 75));
 		Set Global Variable(Z, 2);
 	}
 }
 
-rule("规则 18")
+rule("将全局变量A转换为二维数组")
 {
 	event
 	{
@@ -84,12 +75,19 @@ rule("规则 18")
 
 	actions
 	{
-		Set Global Variable(C, Value In Array(Global Variable(A), 1));
-		Set Global Variable(D, Value In Array(Global Variable(A), 2));
-		Set Global Variable(E, Value In Array(Global Variable(A), 3));
-		Set Global Variable(F, Value In Array(Global Variable(A), 4));
-		Set Global Variable(G, Value In Array(Global Variable(A), 5));
-		Set Global Variable(H, Value In Array(Global Variable(A), 6));
-		Set Global Variable(I, Value In Array(Global Variable(A), 7));
+		Modify Global Variable At Index(A, 1, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 1, 7),
+			Array Slice(Value In Array(Global Variable(A), 7), 39, 5)));
+		Modify Global Variable At Index(A, 2, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 8, 7),
+			Array Slice(Value In Array(Global Variable(A), 7), 44, 5)));
+		Modify Global Variable At Index(A, 3, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 15, 7),
+			Array Slice(Value In Array(Global Variable(A), 7), 49, 5)));
+		Modify Global Variable At Index(A, 4, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 22, 7),
+			Array Slice(Value In Array(Global Variable(A), 7), 54, 5)));
+		Modify Global Variable At Index(A, 5, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 29, 7),
+			Array Slice(Value In Array(Global Variable(A), 7), 59, 5)));
+		Modify Global Variable At Index(A, 6, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 36, 3),
+			Append To Array(Append To Array(Append To Array(Append To Array(0, 0), 0), 0), Array Slice(Value In Array(Global Variable(A),
+			7), 64, 2))));
+		Set Global Variable(Z, 3);
 	}
 }
