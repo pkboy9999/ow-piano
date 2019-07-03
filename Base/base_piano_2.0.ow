@@ -91,3 +91,76 @@ rule("将全局变量A转换为二维数组")
 		Set Global Variable(Z, 3);
 	}
 }
+
+rule("设置十六分音符的间隔")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 3;
+	}
+
+	actions
+	{
+		Set Global Variable At Index(A, 0, Append To Array(Empty Array, 0.095));
+		Set Global Variable(Z, 4);
+	}
+}
+
+rule("按F传送到钢琴面前")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		Slot 0;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Interact) == True;
+	}
+
+	actions
+	{
+		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 13.510, -107.444));
+		Set Status(Players In Slot(0, All Teams), Null, Phased Out, 9999);
+		Set Global Variable(D, 0);
+	}
+}
+
+rule("按E开始演奏")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		Slot 0;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Ability 2) == True;
+		Global Variable(D) == 0;
+	}
+
+	actions
+	{
+		Skip If(Compare(Value In Array(Value In Array(Global Variable(C), 0), Player Variable(Players In Slot(0, All Teams), D)), ==, 0),
+			1);
+		Set Facing(Players In Slot(0, All Teams), Vector Towards(Eye Position(Players In Slot(0, All Teams)), Value In Array(
+			Global Variable(A), Value In Array(Player Variable(Players In Slot(0, All Teams), A), Player Variable(Players In Slot(0,
+			All Teams), Z)))), To World);
+		Wait(0.100, Ignore Condition);
+		Skip If(Compare(Value In Array(Player Variable(Players In Slot(0, All Teams), A), Player Variable(Players In Slot(0, All Teams),
+			Z)), ==, 0), 1);
+		Press Button(Players In Slot(0, All Teams), Primary Fire);
+		Wait(Value In Array(Value In Array(Global Variable(A), 0), 1), Ignore Condition);
+		Set Global Variable(D, Add(Global Variable(D), 1));
+		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 1000));
+	}
+}
