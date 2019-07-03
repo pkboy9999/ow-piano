@@ -79,7 +79,7 @@ rule("规则 18")
 
 	conditions
 	{
-		Global Variable(Z) == 1;
+		Global Variable(Z) == 2;
 	}
 
 	actions
