@@ -9,6 +9,9 @@ rule("变量初始化")
 	{
 		Set Global Variable(A, Empty Array);
 		Set Global Variable(B, 0);
+		Set Global Variable(C, Empty Array);
+		Set Global Variable(D, Empty Array);
+		Set Global Variable(T, 0);
 		Set Global Variable(Z, 0);
 	}
 }
@@ -88,6 +91,7 @@ rule("将全局变量A转换为二维数组")
 		Modify Global Variable At Index(A, 6, Append To Array, Append To Array(Array Slice(Value In Array(Global Variable(A), 7), 36, 3),
 			Append To Array(Append To Array(Append To Array(Append To Array(0, 0), 0), 0), Array Slice(Value In Array(Global Variable(A),
 			7), 64, 2))));
+		Set Global Variable At Index(A, 7, Empty Array);
 		Set Global Variable(Z, 3);
 	}
 }
@@ -105,8 +109,8 @@ rule("设置十六分音符的间隔")
 	}
 
 	actions
-	{
-		Set Global Variable At Index(A, 0, Append To Array(Empty Array, 0.095));
+	{ 
+		Set Global Variable At Index(A, 0, Append To Array(Append To Array(Empty Array, 0.095), 0));
 		Set Global Variable(Z, 4);
 	}
 }
@@ -145,7 +149,7 @@ rule("按E开始演奏")
 	conditions
 	{
 		Is Button Held(Event Player, Ability 2) == True;
-		Global Variable(D) == 0;
+		Global Variable(T) == 0;
 	}
 
 	actions
@@ -164,3 +168,4 @@ rule("按E开始演奏")
 		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 1000));
 	}
 }
+		
