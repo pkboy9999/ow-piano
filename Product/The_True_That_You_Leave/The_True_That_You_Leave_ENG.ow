@@ -1,0 +1,997 @@
+rule("变量初始化")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Set Global Variable(A, Empty Array);
+		Set Global Variable(B, 0);
+		Set Global Variable(C, Empty Array);
+		Set Global Variable(D, Empty Array);
+		Set Global Variable(E, Empty Array);
+		Set Global Variable(K, Empty Array);
+		Set Global Variable(X, Empty Array);
+		Set Global Variable(Y, Empty Array);
+		Set Global Variable(Z, 0);
+	}
+}
+
+rule("初始化钢琴白键坐标A[7]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 0;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Modify Global Variable(A, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(B), Divide(38.500, 1000))), 13.800, Add(
+			-108.021, Multiply(Global Variable(B), Divide(13.200, 1000)))));
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 37));
+		Set Global Variable(Z, 1);
+	}
+}
+
+rule("初始化钢琴黑键坐标A[7]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 1;
+	}
+
+	actions
+	{
+		Skip If(Compare(Modulo(Subtract(Global Variable(B), 37), 7), ==, 0), 2);
+		Skip If(Compare(Modulo(Subtract(Global Variable(B), 37), 7), ==, 3), 1);
+		Modify Global Variable(A, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(B), 38), Divide(38.358, 1000))),
+			13.820, Add(-108.149, Multiply(Subtract(Global Variable(B), 38), Divide(13.100, 1000)))));
+		Wait(0.016, Ignore Condition);
+		Set Global Variable(B, Add(Global Variable(B), 1));
+		Loop If(Compare(Global Variable(B), <=, 75));
+		Set Global Variable(Z, 2);
+	}
+}
+
+rule("转换琴键排序")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 2;
+	}
+
+	actions
+	{
+		Set Global Variable(B, Global Variable(A));
+		Set Global Variable(A, Empty Array);
+		Set Global Variable At Index(A, 100, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Array Slice(Global Variable(B), 0, 7), Array Slice(Global Variable(B),
+			38, 5)));
+		Set Global Variable At Index(A, 200, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Array Slice(Global Variable(B), 7, 7), Array Slice(Global Variable(B),
+			43, 5)));
+		Set Global Variable At Index(A, 300, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Array Slice(Global Variable(B), 14, 7), Array Slice(Global Variable(B),
+			48, 5)));
+		Set Global Variable At Index(A, 400, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Array Slice(Global Variable(B), 21, 7), Array Slice(Global Variable(B),
+			53, 5)));
+		Set Global Variable At Index(A, 500, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Array Slice(Global Variable(B), 28, 7), Array Slice(Global Variable(B),
+			58, 5)));
+		Set Global Variable At Index(A, 600, 0);
+		Modify Global Variable(A, Append To Array, Append To Array(Append To Array(Array Slice(Global Variable(B), 35, 3), Append To Array(
+			Append To Array(Append To Array(0, 0), 0), 0)), Array Slice(Global Variable(B), 63, 2)));
+		Set Global Variable(B, Empty Array);
+		Set Global Variable(Z, 3);
+	}
+}
+
+rule("设置十六分音符的间隔,乐谱初始化")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 3;
+	}
+
+	actions
+	{
+		Set Global Variable At Index(C, 999, 0);
+		Set Global Variable At Index(D, 584, 0);
+		Set Global Variable(Z, 4);
+	}
+}
+
+rule("按F传送到钢琴面前，按E开始演奏")
+{
+	event
+	{
+		Ongoing - Each Player;
+		Team 1;
+		Slot 0;
+	}
+
+	conditions
+	{
+		Is Button Held(Event Player, Interact) == True;
+	}
+
+	actions
+	{
+		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 13.510, -107.444));
+		Set Status(Players In Slot(0, All Teams), Null, Phased Out, 9999);
+		Set Global Variable(Y, 0);
+		Set Global Variable(Z, 100);
+	}
+}
+
+rule("演奏开关A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 100;
+		Is Button Held(Players In Slot(0, Team 1), Ability 2) == True;
+	}
+
+	actions
+	{
+		Set Global Variable(X, Global Variable(C));
+		Set Global Variable(Z, 101);
+	}
+}
+
+rule("演奏循环动作A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 101;
+	}
+
+	actions
+	{
+		Skip If(Compare(First Of(Global Variable(X)), ==, 0), 1);
+		Set Facing(Players In Slot(0, All Teams), Vector Towards(Eye Position(Players In Slot(0, All Teams)), Value In Array(
+			Global Variable(A), First Of(Global Variable(X)))), To World);
+		Wait(0.050, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(X)), ==, 0), 1);
+		Press Button(Players In Slot(0, All Teams), Primary Fire);
+		Wait(0.049, Ignore Condition);
+		Modify Global Variable(X, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(X), !=, Empty Array));
+		Set Global Variable(Z, 102);
+	}
+}
+
+rule("演奏开关B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 102;
+	}
+
+	actions
+	{
+		Set Global Variable(X, Global Variable(D));
+		Set Global Variable(Z, 103);
+	}
+}
+
+rule("演奏循环动作B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 103;
+	}
+
+	actions
+	{
+		Skip If(Compare(First Of(Global Variable(X)), ==, 0), 1);
+		Set Facing(Players In Slot(0, All Teams), Vector Towards(Eye Position(Players In Slot(0, All Teams)), Value In Array(
+			Global Variable(A), First Of(Global Variable(X)))), To World);
+		Wait(0.050, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(X)), ==, 0), 1);
+		Press Button(Players In Slot(0, All Teams), Primary Fire);
+		Wait(0.049, Ignore Condition);
+		Modify Global Variable(X, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(X), !=, Empty Array));
+		Set Global Variable(Z, 104);
+	}
+}
+
+rule("R乐谱录入305A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 4;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Empty Array, 3), 11), 19), 27), 109), 125), 191), 249));
+		Set Global Variable(Z, 5);
+	}
+}
+
+rule("R乐谱录入305B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 5;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 305);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 6);
+	}
+}
+
+rule("R乐谱录入312A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 6;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, 5), 13), 21), 31), 35), 39), 43), 47), 107), 111),
+			185), 233), 253), 303), 361), 425), 443));
+		Set Global Variable(Z, 7);
+	}
+}
+
+rule("R乐谱录入312B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 7;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 312);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 8);
+	}
+}
+
+rule("R乐谱录入401A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 8;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array,
+			51), 139), 141), 143), 155), 203), 205), 207), 219), 235), 271), 273), 299), 331), 333), 335), 347), 445), 1263), 1453));
+		Set Global Variable(Z, 9);
+	}
+}
+
+rule("R乐谱录入401B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 9;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 401);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 401);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 10);
+	}
+}
+
+rule("R乐谱录入402A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 10;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Empty Array, 55), 123), 157), 163), 171), 187), 221), 237), 269), 289), 295),
+			349), 355), 363), 427), 441), 619), 751), 757), 943), 1071), 1131), 1455));
+		Set Global Variable(Z, 11);
+	}
+}
+
+rule("R乐谱录入402B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 11;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 402);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 402);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 12);
+	}
+}
+
+rule("R乐谱录入404A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 12;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Empty Array, 1), 7), 15), 23), 131), 133), 135), 137), 147), 149), 151), 153),
+			195), 197), 199), 201), 211), 213), 215), 217), 227), 255), 323), 325), 327), 329), 339), 341), 343), 345), 715), 779), 843),
+			911), 975), 1039), 1103));
+		Set Global Variable(Z, 13);
+	}
+}
+
+rule("R乐谱录入404B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 13;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 404);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 404);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 14);
+	}
+}
+
+rule("R乐谱录入405A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 14;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array,
+			63), 67), 75), 83), 91), 365), 431), 439), 505), 621), 991), 1133), 1179), 1199), 1227), 1291), 1307), 1355), 1419), 1475),
+			1483), 1491), 1499), 1535), 1539), 1547), 1555));
+		Set Global Variable(Z, 15);
+	}
+}
+
+rule("R乐谱录入405B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 15;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 405);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 405);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 16);
+	}
+}
+
+rule("R乐谱录入406A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 16;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, 367), 433), 437), 507), 753), 759), 795), 895),
+			927), 945), 959), 1023), 1055), 1073), 1087), 1117), 1570));
+		Set Global Variable(Z, 17);
+	}
+}
+
+rule("R乐谱录入406B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 17;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 406);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 406);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 18);
+	}
+}
+
+rule("R乐谱录入412A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 18;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, 69), 77), 85), 369), 435), 509), 567), 645), 647),
+			669), 687), 709), 711), 773), 775), 797), 837), 839), 859), 863), 893), 897), 907), 925), 929), 939), 957), 961), 971), 1021),
+			1025), 1035), 1053), 1057), 1067), 1085), 1089), 1099));
+		Set Global Variable(Z, 19);
+	}
+}
+
+rule("R乐谱录入412B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 19;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 412);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 412);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 20);
+	}
+}
+
+rule("R乐谱录入501A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 20;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Empty Array, 395), 397), 399), 411), 459), 461), 463), 475), 527), 551), 559), 587), 589), 591), 603), 661),
+			663), 671), 683), 725), 727), 789), 791), 799), 853), 855), 861), 891), 913), 923), 955), 977), 1019), 1041), 1051), 1083),
+			1105), 1119), 1181), 1285), 1287), 1309), 1349), 1351), 1371), 1375), 1393), 1413), 1415), 1435), 1439), 1477), 1485), 1493),
+			1503), 1507), 1511), 1515), 1519), 1541), 1549), 1557), 1572));
+		Set Global Variable(Z, 21);
+	}
+}
+
+rule("R乐谱录入501B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 21;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 501);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 501);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 22);
+	}
+}
+
+rule("R乐谱录入502A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 22;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, 93), 413), 419), 477), 495), 503),
+			525), 549), 555), 605), 673), 677), 679), 689), 731), 735), 801), 805), 807), 815), 889), 921), 953), 993), 1017), 1049),
+			1081), 1173), 1175), 1183), 1195), 1237), 1239), 1301), 1303), 1311), 1365), 1367), 1373), 1397), 1429), 1431), 1437), 1525),
+			1533), 1573));
+		Set Global Variable(Z, 23);
+	}
+}
+
+rule("R乐谱录入502B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 23;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 502);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 502);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 24);
+	}
+}
+
+rule("R乐谱录入503A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 24;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array,
+			1185), 1189), 1191), 1201), 1243), 1247), 1313), 1317), 1319), 1327), 1401), 1529), 1574));
+		Set Global Variable(Z, 25);
+	}
+}
+
+rule("R乐谱录入503B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 25;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 503);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 503);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 26);
+	}
+}
+
+rule("R乐谱录入504A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 26;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Empty Array, 65), 71), 79),
+			87), 99), 387), 389), 391), 393), 403), 405), 407), 409), 451), 453), 455), 457), 467), 469), 471), 473), 483), 511), 579),
+			581), 583), 585), 595), 597), 599), 601), 607), 637), 639), 653), 655), 693), 695), 701), 703), 717), 719), 765), 767), 781),
+			783), 823), 829), 831), 845), 847), 987), 1115), 1245));
+		Set Global Variable(Z, 27);
+	}
+}
+
+rule("R乐谱录入504B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 27;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 504);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 504);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 28);
+	}
+}
+
+rule("R乐谱录入505A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 28;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Empty Array, 611), 625), 983), 1111), 1121), 1137), 1149), 1151), 1165), 1167),
+			1205), 1207), 1213), 1215), 1229), 1231), 1277), 1279), 1293), 1295), 1335), 1341), 1343), 1357), 1359), 1405), 1407), 1421),
+			1423), 1473), 1479), 1487), 1495), 1537), 1543), 1551), 1559));
+		Set Global Variable(Z, 29);
+	}
+}
+
+rule("R乐谱录入505B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 29;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 2);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), 505);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 2);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 505);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 30);
+	}
+}
+
+rule("R乐谱录入601A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 30;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Empty Array, 1157), 1159), 1221), 1223), 1323), 1565), 1581));
+		Set Global Variable(Z, 31);
+	}
+}
+
+rule("R乐谱录入601B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 31;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), 601);
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 32);
+	}
+}
+
+rule("R乐谱录剩余A")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 32;
+	}
+
+	actions
+	{
+		Set Global Variable(Y, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Empty Array, 175), 251), 617), 1129), 1259), 1271), 1387), 1391), 1457), 1569), 623), 1135),
+			1265), 1273), 1571), 59), 159), 223), 239), 267), 293), 351), 545), 817), 1575), 1329), 1577), 95), 415), 479), 499), 523),
+			733), 811), 1563), 1561));
+		Set Global Variable(E, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Empty Array, 306), 306), 307), 307), 403), 403), 403), 403), 403), 403), 407), 407), 407),
+			407), 407), 409), 409), 409), 409), 409), 409), 409), 506), 506), 506), 507), 507), 509), 509), 509), 509), 509), 509), 512),
+			602), 603));
+		Set Global Variable(Z, 99);
+	}
+}
+
+rule("R乐谱录剩余B")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Z) == 99;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Skip If(Compare(First Of(Global Variable(Y)), >, 999), 3);
+		Set Global Variable At Index(C, First Of(Global Variable(Y)), First Of(Global Variable(E)));
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Modify Global Variable(E, Remove From Array By Index, 0);
+		Skip If(Compare(First Of(Global Variable(Y)), <=, 999), 3);
+		Set Global Variable At Index(D, Subtract(First Of(Global Variable(Y)), 1000), First Of(Global Variable(E)));
+		Modify Global Variable(Y, Remove From Array By Index, 0);
+		Modify Global Variable(E, Remove From Array By Index, 0);
+		Loop If(Compare(Global Variable(Y), !=, Empty Array));
+		Set Global Variable(Z, 100);
+	}
+}

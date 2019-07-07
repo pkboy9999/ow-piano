@@ -22,10 +22,10 @@ beat_types_map = {
     1: "whole", 2: "half", 4: "quarter", 8: "eighth", 16: "16th", 32: "32nd"
 }
 types = {
-    "whole": 8,
-    "half": 4,
-    "quarter": 2,
-    "eighth": 0,
+    "whole": 16,
+    "half": 8,
+    "quarter": 4,
+    "eighth": 2,
     "16th": 0,
     "32nd": 0
 }

@@ -168,4 +168,3 @@ rule("按E开始演奏")
 		Loop If(Compare(Player Variable(Players In Slot(0, All Teams), Z), <=, 1000));
 	}
 }
-		
