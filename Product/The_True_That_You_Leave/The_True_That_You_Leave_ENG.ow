@@ -147,8 +147,6 @@ rule("按F传送到钢琴面前，按E开始演奏")
 	{
 		Teleport(Players In Slot(0, Team 1), Vector(-84.583, 13.510, -107.444));
 		Set Status(Players In Slot(0, All Teams), Null, Phased Out, 9999);
-		Set Global Variable(Y, 0);
-		Set Global Variable(Z, 100);
 	}
 }
 
@@ -1049,7 +1047,7 @@ rule("R乐谱录剩余B")
 	}
 }
 
-rule("L乐谱录入204A")
+disabled rule("L乐谱录入204A")
 {
 	event
 	{
@@ -1071,7 +1069,7 @@ rule("L乐谱录入204A")
 	}
 }
 
-rule("L乐谱录入204B")
+disabled rule("L乐谱录入204B")
 {
 	event
 	{
@@ -1097,7 +1095,7 @@ rule("L乐谱录入204B")
 	}
 }
 
-rule("L乐谱录剩余A")
+disabled rule("L乐谱录剩余A")
 {
 	event
 	{
@@ -1117,7 +1115,7 @@ rule("L乐谱录剩余A")
 	}
 }
 
-rule("L乐谱录剩余B")
+disabled rule("L乐谱录剩余B")
 {
 	event
 	{
