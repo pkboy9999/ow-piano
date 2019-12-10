@@ -1,0 +1,262 @@
+variables
+{
+	global:
+		0: Piano_Key
+		1: Coordinate_Coefficient
+		2: Step
+		3: Music_Score_Right
+		4: Beat_Right
+
+	player:
+		0: Music_Score_Personal
+		1: Beat_Personal
+		2: Step_Personal
+}
+
+rule("变量初始化")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Piano_Key) == 0;
+	}
+
+	actions
+	{
+		Set Global Variable(Coordinate_Coefficient, 0);
+		Set Global Variable(Step, 0);
+		Set Global Variable(Piano_Key, Empty Array);
+		Set Global Variable(Music_Score_Right, Empty Array);
+		Set Global Variable(Beat_Right, Empty Array);
+		Set Player Variable(All Players(All Teams), Music_Score_Personal, Empty Array);
+		Set Player Variable(All Players(All Teams), Beat_Personal, Empty Array);
+	}
+}
+
+rule("无限时间")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	actions
+	{
+		Set Match Time(3599);
+		Wait(3300, Ignore Condition);
+		Loop;
+	}
+}
+
+rule("初始化钢琴白键坐标A[7]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 0;
+	}
+
+	actions
+	{
+		Wait(0.016, Ignore Condition);
+		Modify Global Variable(Piano_Key, Append To Array, Vector(Add(-85.409, Multiply(Global Variable(Coordinate_Coefficient), Divide(
+			38.500, 1000))), 13.800, Add(-108.021, Multiply(Global Variable(Coordinate_Coefficient), Divide(13.200, 1000)))));
+		Set Global Variable(Coordinate_Coefficient, Add(Global Variable(Coordinate_Coefficient), 1));
+		Loop If(Compare(Global Variable(Coordinate_Coefficient), <=, 37));
+		Set Global Variable(Step, 1);
+	}
+}
+
+rule("初始化钢琴黑键坐标A[7]")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 1;
+	}
+
+	actions
+	{
+		Skip If(Compare(Modulo(Subtract(Global Variable(Coordinate_Coefficient), 37), 7), ==, 0), 2);
+		Skip If(Compare(Modulo(Subtract(Global Variable(Coordinate_Coefficient), 37), 7), ==, 3), 1);
+		Modify Global Variable(Piano_Key, Append To Array, Vector(Add(-85.341, Multiply(Subtract(Global Variable(Coordinate_Coefficient),
+			38), Divide(38.358, 1000))), 13.820, Add(-108.149, Multiply(Subtract(Global Variable(Coordinate_Coefficient), 38), Divide(
+			13.100, 1000)))));
+		Wait(0.016, Ignore Condition);
+		Set Global Variable(Coordinate_Coefficient, Add(Global Variable(Coordinate_Coefficient), 1));
+		Loop If(Compare(Global Variable(Coordinate_Coefficient), <=, 75));
+		Set Global Variable(Step, 2);
+	}
+}
+
+rule("转换琴键排序")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 2;
+	}
+
+	actions
+	{
+		Set Global Variable(Coordinate_Coefficient, Global Variable(Piano_Key));
+		Set Global Variable(Piano_Key, Empty Array);
+		Set Global Variable At Index(Piano_Key, 100, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Array Slice(Global Variable(Coordinate_Coefficient), 0, 7),
+			Array Slice(Global Variable(Coordinate_Coefficient), 38, 5)));
+		Set Global Variable At Index(Piano_Key, 200, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Array Slice(Global Variable(Coordinate_Coefficient), 7, 7),
+			Array Slice(Global Variable(Coordinate_Coefficient), 43, 5)));
+		Set Global Variable At Index(Piano_Key, 300, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Array Slice(Global Variable(Coordinate_Coefficient), 14, 7),
+			Array Slice(Global Variable(Coordinate_Coefficient), 48, 5)));
+		Set Global Variable At Index(Piano_Key, 400, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Array Slice(Global Variable(Coordinate_Coefficient), 21, 7),
+			Array Slice(Global Variable(Coordinate_Coefficient), 53, 5)));
+		Set Global Variable At Index(Piano_Key, 500, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Array Slice(Global Variable(Coordinate_Coefficient), 28, 7),
+			Array Slice(Global Variable(Coordinate_Coefficient), 58, 5)));
+		Set Global Variable At Index(Piano_Key, 600, 0);
+		Modify Global Variable(Piano_Key, Append To Array, Append To Array(Append To Array(Array Slice(Global Variable(
+			Coordinate_Coefficient), 35, 3), Append To Array(Append To Array(Append To Array(0, 0), 0), 0)), Array Slice(Global Variable(
+			Coordinate_Coefficient), 63, 2)));
+		Set Global Variable(Coordinate_Coefficient, 0);
+		Set Global Variable(Step, 3);
+	}
+}
+
+rule("开始演奏")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 100;
+		Is Button Held(Event Player, Ability 2) == True;
+	}
+
+	actions
+	{
+		Set Global Variable(Step, 101);
+		Set Player Variable(Event Player, Music_Score_Personal, Global Variable(Music_Score_Right));
+		Set Player Variable(Event Player, Beat_Personal, Global Variable(Beat_Right));
+		Start Facing(Event Player, Vector Towards(Eye Position(Event Player), Value In Array(Global Variable(Piano_Key), Value In Array(
+			Player Variable(Event Player, Music_Score_Personal), Player Variable(Event Player, Step_Personal)))), 300, To World,
+			Direction and Turn Rate);
+		Wait(3, Ignore Condition);
+		Stop Facing(Event Player);
+		Set Global Variable(Step, 102);
+	}
+}
+
+rule("演奏循环")
+{
+	event
+	{
+		Ongoing - Each Player;
+		All;
+		All;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 102;
+	}
+
+	actions
+	{
+		Start Facing(Event Player, Vector Towards(Eye Position(Event Player), Value In Array(Global Variable(Piano_Key), Value In Array(
+			Player Variable(Event Player, Music_Score_Personal), Player Variable(Event Player, Step_Personal)))), 300, To World,
+			Direction and Turn Rate);
+		Wait(Multiply(0.169, Value In Array(Player Variable(Event Player, Beat_Personal), Subtract(Player Variable(Event Player,
+			Step_Personal), 1))), Ignore Condition);
+		Stop Facing(Event Player);
+		Press Button(Event Player, Primary Fire);
+		Press Button(Event Player, Primary Fire);
+		Press Button(Event Player, Primary Fire);
+		Set Player Variable(Event Player, Step_Personal, Add(Player Variable(Event Player, Step_Personal), 1));
+		Loop If(Compare(Player Variable(Event Player, Step_Personal), <, 60));
+		Set Player Variable(All Players(All Teams), Music_Score_Personal, Empty Array);
+		Set Player Variable(All Players(All Teams), Beat_Personal, Empty Array);
+		Set Player Variable(All Players(All Teams), Step_Personal, Empty Array);
+		Set Global Variable(Step, 100);
+	}
+}
+
+rule("写入乐谱")
+{
+	event
+	{
+		Ongoing - Global;
+	}
+
+	conditions
+	{
+		Global Variable(Step) == 3;
+	}
+
+	actions
+	{
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Append To Array(Global Variable(Music_Score_Right), 509), 508), 511), 508), 509), 508), 411),
+			508));
+		Set Global Variable(Music_Score_Right, Append To Array(Append To Array(Append To Array(Append To Array(Global Variable(
+			Music_Score_Right), 509), 511), 608), 609));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(Append To Array(
+			Append To Array(Append To Array(Global Variable(Beat_Right), 2), 2), 2), 2), 2), 2), 2), 2));
+		Set Global Variable(Beat_Right, Append To Array(Append To Array(Append To Array(Append To Array(Global Variable(Beat_Right), 2),
+			2), 2), 10));
+		Set Global Variable(Step, 100);
+	}
+}
