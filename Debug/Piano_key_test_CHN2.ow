@@ -2,86 +2,11 @@
 {
 	全局:
 		0: Piano_Key
-		2: Step
-		5: Music_Score_Left
-		6: Beat_Left
-		7: Music_Player
-
-	玩家:
-		0: Music_Score_Personal
-		1: Beat_Personal
-		2: Step_Personal
+		9: Filter_Right_Key
 }
 
-规则("开始演奏[源氏]")
+动作
 {
-	事件
-	{
-		持续 - 每名玩家;
-		队伍1;
-		位置 0;
-	}
-
-	条件
-	{
-		全局变量(Step) == 100;
-		按钮被按下(事件玩家, 技能2) == 真;
-		全局变量(Music_Player) != 空数组;
-	}
-
-	动作
-	{
-		设置全局变量(Step, 101);
-		设置玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal, 全局变量(Music_Score_Left));
-		设置玩家变量(数组中的值(全局变量(Music_Player), 0), Beat_Personal, 全局变量(Beat_Left));
-		根据条件跳过(比较(数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal), 0), ==, 0), 1);
-		开始朝向(数组中的值(全局变量(Music_Player), 0), 向量(眼睛位置(数组中的值(全局变量(Music_Player), 0)), 数组中的值(全局变量(Piano_Key), 数组中的值(玩家变量(数组中的值(全局变量(
-			Music_Player), 1), Music_Score_Personal), 0))), 300, 至地图, 无);
-		根据条件跳过(比较(数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal), 0), !=, 0), 1);
-		开始朝向(数组中的值(全局变量(Music_Player), 0), 向量(眼睛位置(数组中的值(全局变量(Music_Player), 0)), 数组中的值(全局变量(Piano_Key), 数组中的值(玩家变量(数组中的值(全局变量(
-			Music_Player), 1), Music_Score_Personal), 1))), 300, 至地图, 无);
-		等待(3, 无视条件);
-		停止朝向(数组中的值(全局变量(Music_Player), 0));
-		设置全局变量(Step, 102);
-	}
-}
-
-规则("演奏循环[源氏]")
-{
-	事件
-	{
-		持续 - 每名玩家;
-		队伍1;
-		位置 0;
-	}
-
-	条件
-	{
-		全局变量(Step) == 102;
-	}
-
-	动作
-	{
-		根据条件跳过(比较(数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal), 玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal)), !=,
-			0), 1);
-		停止朝向(数组中的值(全局变量(Music_Player), 0));
-		根据条件跳过(比较(数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal), 玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal)), ==,
-			0), 1);
-		开始朝向(数组中的值(全局变量(Music_Player), 0), 向量(眼睛位置(数组中的值(全局变量(Music_Player), 0)), 数组中的值(全局变量(Piano_Key), 数组中的值(玩家变量(数组中的值(全局变量(
-			Music_Player), 1), Music_Score_Personal), 玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal)))), 500, 至地图, 方向及角速率);
-		等待(乘(0.107, 数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Beat_Personal), 减(玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal), 1))),
-			无视条件);
-		根据条件跳过(比较(数组中的值(玩家变量(数组中的值(全局变量(Music_Player), 0), Music_Score_Personal), 玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal)), ==,
-			0), 3);
-		按下按键(数组中的值(全局变量(Music_Player), 0), 主要攻击模式);
-		按下按键(数组中的值(全局变量(Music_Player), 0), 主要攻击模式);
-		按下按键(数组中的值(全局变量(Music_Player), 0), 主要攻击模式);
-		设置玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal, 加(玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal), 1));
-		根据条件循环(比较(玩家变量(数组中的值(全局变量(Music_Player), 0), Step_Personal), <, 60));
-		设置玩家变量(所有玩家(所有队伍), Music_Score_Personal, 空数组);
-		设置玩家变量(所有玩家(所有队伍), Beat_Personal, 空数组);
-		停止朝向(数组中的值(全局变量(Music_Player), 0));
-		设置玩家变量(所有玩家(所有队伍), Step_Personal, 空数组);
-		设置全局变量(Step, 100);
-	}
+	设置全局变量(Filter_Right_Key, 添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(添加至数组(全局变量(Piano_Key), 8), 17), 19),
+		21), 23), 25), 27), 29), 31), 33), 35), 41), 43), 45), 47), 49), 51), 53), 55), 57), 59));
 }
